@@ -1,0 +1,1745 @@
+@root@
+This is the main page of the SLab help
+List of command category topics:
+
+   manage : System management
+     file : File commands
+     base : Base DC voltage operations
+   plotdc : DC curves
+     plot : Generic plot commands
+     tran : Transient commands
+     wave : Wave commands
+     util : Utility commands
+      dio : Digital I/O
+      cal : Board calibration
+      var : Internal variables
+      
+List of SLab submodule category topics:
+
+       dc : DC submodule
+       ac : AC submodule
+     meas : Measure submodule
+      fft : FFT submodule
+       ez : Easy submodule
+	  
+You can also input the name of a particular command
+@manage@  
+List of management command topics:
+
+  connect
+  disconnect
+  softReset
+  printBoardInfo
+  wait
+  pause
+  setVerbose
+  setPlotReturnData
+@file@
+  save
+  load  
+  setFilePrefix
+  setCalPrefix  
+@base@
+List of base DC voltage command topics:
+
+  setVoltage
+  readVoltage
+  rCurrent
+  dcPrint
+  dcLive
+  zero
+  dcSweep
+  dcSweepPlot
+  writeDAC
+  readADC  
+  setDCreadings
+@plot@
+List of generic plotting command topics:
+
+  plot11
+  plot1n
+  plotnn
+@tran@
+List of transient command topics:
+
+  setSampleTime
+  setTransientStorage
+  tranStore (alias)
+  tranAsyncPlot
+  tranTriggeredPlot
+  stepPlot
+  transientAsync
+  transientTriggered
+  stepResponse
+@wave@
+List of wave command topics:
+
+   waveSquare
+   waveTriangle
+   waveSawtooth
+   waveSine
+   waveCosine
+   wavePulse
+   waveNoise
+   waveRandom
+   loadWavetable
+   setWaveFrequency
+   wavePlot
+   waveResponse
+   singleWavePlot
+   singleWaveResponse
+   wavePlay
+@util@  
+List of utility command topics:
+
+   highPeak
+   lowPeak
+   peak2peak
+   halfRange
+   mean
+   std
+   rms
+@dio@
+List of digital I/O command topics:
+
+   dioMode
+   dioWrite
+   dioRead   
+@cal@
+Full board calibration is a four stage procedure
+List of calibration command and alias topics:
+
+  Stage 1 : manualCalibrate   | cal1
+  Stage 2 : adcCalibrate      | cal2
+  Stage 3 : dacCalibrate      | cal3
+  Stage 4 : checkCalibration  | cal4
+ 
+ setVdd
+ setVref
+@var@
+List of internal variables topics:
+
+  vdd
+  vref
+  sampleTime
+  linux  
+@vdd@
+vdd
+Voltage supply in Volt
+Do not modify this variable
+@vref@
+vref
+Voltage reference in Volt for DACs and ADCs
+Do not modify this variable
+@sampleTime@
+Current sample time in seconds
+Do not modify this variable
+@linux@
+True if system is detected as Linux
+Modify before connect if autodetect fails
+@help@
+help(topic)
+Gives help information
+
+Optional parameters:
+   topic : Text to give information about
+           (Defaults to "root")
+Returns nothing
+Included in slab.py           
+@wait@
+wait(t)
+Wait the indicated time in seconds
+
+Required parameter:
+    t : Time to wait in float seconds
+Returns nothing
+Included in slab.py 
+@pause@
+pause(message)
+Pause the script untill return is hit
+
+Optional parameter:
+  message : Message to show 
+            (Use default if not provided)
+Returns nothing 
+Included in slab.py            
+@setVerbose@
+setVerbose(level)
+Sets the verbose level
+
+Required parameter:
+   level : Verbose level 0, 1, 2 or 3
+           0 : No messages
+           1 : Only warnings
+           2 : Basic information
+           3 : Detailed information
+Returns previous verbose level 
+Included in slab.py   
+@setFilePrefix@
+setFilePrefix(prefix)
+Set file prefix for all external files
+
+Optional parameter:
+  prefix : Prefix to use (Defaults to none)
+Returns nothing  
+Included in slab.py 
+
+See also setCalPrefix
+@setCalPrefix@
+setCalPrefix(prefix)
+Set file prefix for calibration files
+It adds after file prefix if present
+
+Optional parameter:
+  prefix : Prefix to use (Defaults to none)
+Returns nothing  
+Included in slab.py 
+
+See also setFilePrefix
+@save@
+save(filename,data)
+Saves a variable on a file
+Adds .sav extension to filename
+
+Parameters:
+  filename : Name of the file (with no extension)
+  data : Variable to store
+  
+Returns nothing  
+Included in slab.py 
+@load@
+load(filename)
+Loads a variable from a file
+Adds .sav extension to filename
+
+Parameters:
+  filename : Name of the file (with no extension)
+  
+Returns variable contained in the file
+Included in slab.py 
+@printBoardInfo@
+printBoardInfo()
+Shows board information on screen
+Returns nothing
+Included in slab.py 
+@disconnect@
+disconnect()
+Disconnect from the board
+Returns nothing
+Included in slab.py 
+@connect@
+connect(portIdent)
+Open the connection with the hardware board
+Must be called before any other function that uses it
+
+Optional parameter:
+   portIdent : Identifier of the COM port 
+               In windows it is COMx where x is a number
+               (Defaults to Autodetect)
+Returns nothing
+Included in slab.py 
+@setVdd@
+setVdd(value,persistent)
+Set Vdd supply voltage
+
+Required parameter:
+  value : Value to set (in Volt)
+  
+Optional parameter:
+  persistent : Makes value persistent in a file
+               (Defaults to False)
+
+Returns nothing  
+Included in slab.py              
+@setVref@
+setVref(value,persistent)
+Set Vref reference value for DACs and ADCs
+
+Required parameter:
+  value : Value to set (in Volt)
+  
+Optional parameter:
+  persistent : Makes value persistent in a file
+               (Defaults to False)
+
+Returns nothing
+Included in slab.py                
+@writeDAC@
+writeDAC(channel,value)
+Write a ratiometric value to one DAC
+Performs calibration if available
+
+Required parameteres:
+ channel : DAC number
+   value : Value to set from 0.0 to 1.0 
+Returns nothing
+Included in slab.py    
+@setVoltage@
+setVoltage(channel,value)
+Sets the voltage value of one DAC
+Performs calibration if available
+
+Required parameters:
+ channel : DAC to write
+   value : Voltage to set
+Returns nothing
+Included in slab.py    
+@readADC@
+readADC(channel)
+Read the ratiometric value at one ADC
+Uses calibration data if available
+
+Rquired parameter:
+  n : ADC number
+Returns a ratiometric value between 0.0 and 1.0
+Included in slab.py 
+@readVoltage@
+readVoltage(ch1,ch2)
+Reads a differential voltage between two ADCs at ch1 and ch2
+If ch2 is ommited, returns voltage between ch1 and GND
+If any channel is zero, it is considered as GND
+Return the voltage
+Included in slab.py 
+@rCurrent@
+rCurrent(r,ch1,ch2)
+Reads the voltage on a resistor and computes current from it
+If any channel is zero, it is considered as GND
+
+Parameters:
+   r : Resistor value
+  n1 : Positive terminal ADC
+  n2 : Negative terminal ADC
+       If omited it is considered to be GND
+Returns the resistor current 
+Included in slab.py       
+@setDCreadings@
+setDCreadings(number)
+Sets the number of readings to average on each DC mesurement
+Parameter:
+  number : Number of values to read
+Returns last value of this number
+Included in slab.py   
+@adcCalibrate@
+adcCalibrate()
+Second stage of board calibration
+Calibrates ADCs against DAC1
+Stores calibration data on ADC_CAL_FILE file
+Returns nothing
+Included in slab.py 
+@dacCalibrate@
+dacCalibrate()
+Third stage of board calibration
+Calibrates DAC(i) against ADC(i)
+Stores calibration data on DAC_CAL_FILE file
+Returns nothing
+Included in slab.py 
+@manualCalibrateDAC1@
+manualCalibrateDAC1()
+First stage of board calibration
+Performs a manual calibration of DAC 1 against a voltage meter
+Also calibrates Vdd and Vref
+Returns nothing
+Included in slab.py 
+@checkCalibration@
+checkCalibration()
+Fourth and last stage of board calibration
+Checks the board calibration
+Shows the curves of DACs connected to ADCs
+Returns nothing
+Included in slab.py 
+@dcPrint@
+dcPrint()
+Show readings all four ADC channels on screen
+Returns nothing
+Included in slab.py  
+@zero@
+zero()
+Set all DACs to ratiometric zero
+Does not use calibration
+Returns nothing
+Included in slab.py 
+@dcLive@
+dcLive(n,wt,single,returnData)
+Prints live values of ADC voltages
+Use CTRL+C to exit
+
+Optional parameters:
+          n : Number of ADCs to show (Defaults to 4)
+         wt : Wait time, in seconds, between measurements (Defaults to 0.2)
+     single : Read only the ADC number n
+ returnData : Return obtained data
+
+Included in slab.py
+@cal1@
+cal1()
+Alias for the manualCalibrateDAC1 command
+Included in slab.py
+@cal2@
+cal2()
+Alias for the adcCalibrate command
+Included in slab.py
+@cal3@
+cal3()
+Alias for the dacCalibrate command
+Included in slab.py
+@cal4@
+cal4()
+Alias for the checkCalibration command
+Included in slab.py
+@dcSweep@
+dcSweep(ndac,v1,v2,vi,wt)
+Performs a DC Sweep on a DAC and reads all ADCs at each point
+
+Required parameters:
+  ndac : DAC to sweep
+    v1 : Start voltage
+    v2 : End voltage
+    
+Optional parameters    
+    vi : Increment (Defaults to 0.1 V)
+    wt : Wait time at each step (Defaults to 0.1 s)
+    
+Returns a list of vectors
+   Vector 0 is the DAC value
+   Vectorns 1 onward are ADC values    
+
+Included in slab.py    
+@setPlotReturnData@
+setPlotReturnData(value)
+Configures if plot commands shoud return the plotted data
+
+Optional parameters:
+  value : By default is False
+Returns nothing 
+Included in slab.py  
+@plot11@
+plot11(x,y,title,xt,yt,logx,logy)
+Plot one input against one output
+If x is an empty list [], a sequence number
+will be used for the x axis
+
+Required parameters:
+  x : Horizontal vector
+  y : Vertical vector
+  
+Optional parameters:
+  title : Plot title (Defaults to none)
+     xt : Label for x axis (Defaults to none)
+     yt : Label for y axis (Defaults to none)
+   logx : Use logarithmic x axis (Defaults to False)
+   logy : Use logarithmic x axis (Defaults to False)
+
+Returns nothing
+Included in slab.py      
+@plot1n@
+plot1n(x,ylist,title,xt,yt,labels,location,logx,logy)
+Plot one input against several outputs
+If x is an empty list [], a sequence number
+will be used for the x axis
+
+Required parameters:
+      x : Horizontal vector
+  ylist : List of vertical vectors
+  
+Optional parameters:
+    title : Plot title (Defaults to none)
+       xt : Label for x axis (Defaults to none)
+       yt : Label for y axis (Defaults to none)
+   labels : List of legend labels (Defaults to none)
+ location : Location for legend (Defaults to 'best')
+     logx : Use logarithmic x axis (Defaults to False)
+     logy : Use logarithmic x axis (Defaults to False)
+
+Returns nothing
+Included in slab.py     
+@plotnn@
+plotnn(xlist,ylist,title,xt,yt,labels,location,logx,logy)
+Plot several curves with different inputs and outputs
+
+Required parameters:
+  xlist : List of horizontal vector
+  ylist : List of vertical vectors
+  
+Optional parameters:
+    title : Plot title (Defaults to none)
+       xt : Label for x axis (Defaults to none)
+       yt : Label for y axis (Defaults to none)
+   labels : List of legend labels (Defaults to none)
+ location : Location for legend (Defaults to 'best')
+     logx : Use logarithmic x axis (Defaults to False)
+     logy : Use logarithmic x axis (Defaults to False)
+
+Returns nothing
+Included in slab.py     
+@dcSweepPlot@
+dcSweepPlot(ndac,v1,v2,vi,na,wt,returnData)
+Plots the results of a DC sweep
+
+Required parameters: 
+ ndac : DAC to sweep
+   v1 : Initial value (in Volt)
+   v2 : End of range (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)  
+  na : Number of ADCs to show (defaults to 4)
+  wt : Waiting time between steps (defaults to 0.1s)
+  returnData : Enable return of plot data (Defaults to False)
+  
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab.py 
+@realtimePlot@
+realtimePlot(nadc,wt,returnData)
+Plots ADC data in real time
+
+Optional parameters:
+        nadc : Number of ADCs to read (Defaults to 1)
+          wt : Wait time between read (Defaults to 0.2s)
+           n : Number of points to show (Defaults to All)
+  returnData : Returns captured data if true (Defaults to False)
+  
+Returns a time+nadc list if returnData is true  
+Included in slab.py   
+@setSampleTime@
+setSampleTime(st)
+Set sample time for time measurements
+Resolution on sample time is limited so value set 
+can be different of the input value
+Check your hardware board limits
+
+Required parameter:
+  st : Sample time (float seconds)
+  
+Returns real sample time set
+Included in slab.py   
+@setTransientStorage@
+setTransientStorage(samples,na)
+Set storage for samples in transient time measurements
+Check your hardware board limits
+
+Required parameters:
+  samples : Number of samples to obtain
+  
+Optional parameters:  
+  na : Number of ADC analog signals to record
+       (Defaults to 1)
+       
+Returns nothing
+Included in slab.py 
+
+This command has an alias tranStore
+@tranStore@
+tranStore(samples,na)
+Alias for the command setTransientStorage
+Included in slab.py 
+@transientAsync@
+transientAsync()
+Performs an asynchronous transient measurement
+
+Returns a list of vectors
+  Vector 0 is time
+  Vectors 1 onward are ADC readings
+  
+Included in slab.py  
+See also setSampleTime and setTransientStorage  
+@transientTriggered@
+transientTriggered(level,mode,timeout)
+Performs a triggered transient measurement
+Mesuremenst will be centered at the trigger point
+
+Required parameters:
+  level : Trigger level (float voltage)
+  
+Optional parameters:  
+   mode : Trigger mode (tmodeRise or tmodeFall)
+          (Defaults to tmodeRise)
+   timeout : Timeout in integer seconds (Defaults to no timeout)       
+   
+Returns a list of vectors
+  Vector 0 is time
+  Vectors 1 onward are ADC readings   
+   
+Included in slab.py    
+See also setSampleTime and setTransientStorage     
+@stepResponse@
+stepResponse(v1,v2,t)
+Obtains the Step Response for a circuit
+  1/5 of measurement time will be before the step
+  4/5 of measurement time will be after the step
+  
+Required parameters:
+       v1 : Start voltage
+       v2 : End voltage
+       
+Optional parameters:       
+    tinit : Time before start in seconds (defaults to 1 s)
+    
+Returns a list of vectors
+  Vector 0 is time
+  Vectors 1 onward are ADC readings   
+
+Included in slab.py   
+See also setSampleTime and setTransientStorage       
+@tranAsyncPlot@
+tranAsyncPlot(returnData)
+Plots an asynchronous transient measurement
+
+Optional parameter:
+  returnData : Enable return of plot data (Defaults to False)
+
+Returns plot data if enabled
+  Vector 0 is time
+  Vectors 1 onward are ADC readings
+
+Included in slab.py   
+See also setSampleTime, setTransientStorage and setPlotReturnData
+@tranTriggeredPlot@
+tranTriggeredPlot(level,mode,timeout,returnData)
+Plots a triggered transient measurement
+Mesuremenst will be centered at the trigger point
+
+Required parameters:
+  level : Trigger level (float voltage)
+  
+Optional parameters:  
+   mode : Trigger mode (tmodeRise or tmodeFall)
+          (Defaultst to tmodeRise)
+   timeout : Timeout in integer seconds (Defaults to no timeout)           
+   returnData : Enable return of plot data (Defaults to False)
+   
+Returns plot data if enabled
+  Vector 0 is time
+  Vectors 1 onward are ADC readings   
+
+Included in slab.py   
+See also setSampleTime, setTransientStorage and setPlotReturnData
+@stepPlot@  
+stepPlot(v1,v2,tinit,returnData)  
+Plots the Step Response for a circuit
+  1/5 of measurement time will be before the step
+  4/5 of measurement time will be after the step
+  
+Required parameters:
+  v1 : Start voltage
+  v2 : End voltage
+       
+Optional parameters:       
+  tinit : Time before start in seconds (defaults to 1 s)
+  returnData : Enable return of plot data (Defaults to False)
+    
+Returns plot data if enabled (see setPlotReturnData) 
+  Vector 0 is time
+  Vectors 1 onward are ADC readings   
+
+Included in slab.py   
+See also setSampleTime, setTransientStorage and setPlotReturnData
+@loadWavetable@
+loadWavetable(list,second=False)
+Load one wavetable on the hardware board
+Loading a primary wavetable erases the secondary if present
+
+Required parameters:
+  list : List of values of the wavetable
+         If empty [] the wavetable will be erased
+    
+Optional parameters:
+  second : Load secondary wavetable for DAC2
+           (Defaults to false)    
+
+Included in slab.py            
+Returns nothing
+@waveSquare@
+waveSquare(v1,v2,np,returnList,second)
+Loads square wavetable omn the hardware board
+
+Required parameters:
+  v1 : Start value
+  v2 : End value
+  np : Number of points for a full wave
+    
+Optional parameters:    
+ returnList : Request a return list (Default False)
+     second : Load on secondary table
+              (Defaults to false) 
+               
+If returnList is True, returns the table of loaded values
+Included in slab.py 
+@wavePulse@
+wavePulse(v1,v2,np,n1,returnList,second)
+Loads a pulse wavetable on the hardware board
+
+Parameters:
+  v1 : Start value
+  v2 : End value
+  np : Number of points for a full wave 
+  n1 : Number of points at v1
+           
+Optional parameters:    
+ returnList : Request a return list (Default False)
+     second : Load on secondary table
+              (Defaults to false)   
+              
+If returnList is True, returns the table of loaded values
+Included in slab.py 
+@waveTriangle@
+waveTriangle(v1,v2,np,n1,returnList,second)
+Loads a triangle wavetable on the hardware board
+
+Parameters:
+   v1 : Minimum value
+   v2 : Maximum value
+   np : Number of points for a full wave 
+           
+Optional parameters:    
+ returnList : Request a return list (Default False)
+     second : Load on secondary table
+              (Defaults to false)   
+              
+If returnList is True, returns the table of loaded values
+Included in slab.py 
+@waveSawtooth@
+waveSawtooth(v1,v2,np,returnList,second)
+Loads a sawtooth wavetable on the hardware board
+
+Parameters:
+    v1 : Start value
+    v2 : End value
+    np : Number of points for a full wave 
+           
+Optional parameters:    
+ returnList : Request a return list (Default False)
+     second : Load on secondary table
+              (Defaults to false)     
+   
+If returnList is True, returns the table of loaded values
+Included in slab.py 
+@waveSine@
+waveSine(v1,v2,np,phase,returnList,second)
+
+Generates a sine wavetable
+Parameters:
+  v1 : Minimum value
+  v2 : Maximum value
+  np : Number of points for a full wave 
+           
+Optional parameters:    
+      phase : Phase of the signal (deg) (Defaults to 0)
+ returnList : Request a return list (Default False)
+     second : Load on secondary table
+              (Defaults to false)     
+   
+If returnList is True, returns the table of loaded values
+Included in slab.py 
+@waveCosine@
+waveCosine(v1,v2,np,returnList,second)
+
+Generates a cosine wavetable
+Parameters:
+  v1 : Minimum value
+  v2 : Maximum value
+  np : Number of points for a full wave 
+           
+Optional parameters:    
+       phase : Phase of the signal (deg) (Defaults to 0)
+  returnList : Request a return list (Default False)
+      second : Load on secondary table
+               (Defaults to false)     
+   
+If returnList is True, returns the table of loaded values
+Included in slab.py 
+@waveNoise@
+waveNoise(vm,vstd,n,returnList,second)
+
+Generates a noise wavetable
+Based on a normal distribution
+Samples are truncated between 0 and Vref
+
+Parameters:
+    vm : Mean value
+  vstd : Standard deviation
+     n : Number of points
+           
+Optional parameters:    
+   returnList : Request a return list (Default False)
+       second : Load on secondary table
+                (Defaults to false)     
+   
+If returnList is True, returns the table of loaded values
+Included in slab.py 
+@waveRandom@
+waveRandom(v1,v2,n,returnList,second)
+
+Generates a random wavetable
+Based on a uniform distribution
+Samples will be random values between v1 and v2
+
+Parameters:
+   v1 : Minimum voltage
+   v2 : Maximum voltage
+    n : Number of points
+           
+Optional parameters:    
+   returnList : Request a return list (Default False)
+       second : Load on secondary table
+                (Defaults to false)     
+   
+If returnList is True, returns the table of loaded values
+Included in slab.py 
+@setWaveFrequency@
+setWaveFrequency(freq)
+Set wave frequency by changing sample frequency 
+
+Required parameters:
+   freq : Wave frequency in Hz
+   
+Return sampleTime set
+Included in slab.py 
+@waveResponse@
+waveResponse(npre,tinit,dual)
+Obtain the response of a circuit against a wave
+
+Measurement sequence:
+  1) Set DAC1 to first wave sample during tinit
+  2) Send npre waves to DAC1
+  3) Start measurement as set on setTransientStorage
+     During this time wave continues to be generated
+
+Optional parameters:  
+  npre : Number of waves before measurement (default to zero)
+ tinit : Time iddle before first wave (default to zero)
+  dual : Use dual DAC generation (defaults to False)
+ 
+Returns a list of vectors:
+  Vector 0 is time
+  Vectors 1 onward are ADC readings          
+      
+Included in slab.py       
+See also setWaveFrequency and setTransientStorage
+@singleWaveResponse@
+waveResponse(channel,npre,tinit)
+Obtain the response of a circuit against a wave
+Response is obtained only on the selected channel
+regardless of the setting on setTransientStorage
+
+Measurement sequence:
+  1) Set DAC1 to first wave sample during tinit
+  2) Send npre waves to DAC1
+  3) Start measurement as set on setTransientStorage
+     During this time wave continues to be generated
+
+Optional parameters: 
+ channel : ADC channel to read (default to 1)
+    npre : Number of waves before measurement (default to zero)
+   tinit : Time iddle before first wave (default to zero)
+ 
+Returns a list of two:
+  Vector 0 is time
+  Vectors 1 is ADC readings          
+      
+Included in slab.py       
+See also setWaveFrequency and setTransientStorage
+@wavePlay@
+wavePlay(n,tinit,dual)
+Generates wave withou measuring
+
+Generation sequence:
+  1) Set DAC1 to first wave sample during tinit
+  2) Send n waves to DAC1
+
+Optional parameters:  
+     n : Number of waves to send (default to one)
+           Zero means infinite (Use HALT to end)
+ tinit : Time iddle before first wave (default to zero)
+  dual : Use dual DAC generation (defaults to False)
+
+Returns nothing  
+Included in slab.py 
+      
+See also setWaveFrequency
+@wavePlot@
+wavePlot(npre,tinit,dual,returnData)
+Plot the response of a circuit against a wave
+
+Measurement sequence:
+  1) Set DAC1 to first wave sample during tinit
+  2) Send npre waves to DAC1
+  3) Start measurement as set on setTransientStorage
+     During this time wave continues to be generated
+
+Optional parameters:  
+ npre : Number of waves before measurement (default to zero)
+ tinit : Time iddle before first wave (default to zero)
+ dual : Generate waves on both dacs (defaults to False)
+ returnData : Enables return of plot data (defaults to False)
+ 
+Returns plot data if enabled
+  Vector 0 is time
+  Vectors 1 onward are ADC readings          
+      
+Included in slab.py       
+See also setWaveFrequency, setTransientStorage and setPlotReturnData
+@singleWavePlot@
+singleWavePlot(channel,npre,tinit,returnData)
+Plot the response of a circuit against a wave
+Response is obtained only on the selected channel
+regardless of the setting on setTransientStorage
+
+Measurement sequence:
+  1) Set DAC1 to first wave sample during tinit
+  2) Send npre waves to DAC1
+  3) Start measurement as set on setTransientStorage
+     During this time wave continues to be generated
+
+Optional parameters:  
+ channel : ADC channel to use (defaults to 1)
+ npre : Number of waves before measurement (default to zero)
+ tinit : Time iddle before first wave (default to zero)
+ returnData : Enables return of plot data (defaults to False)
+ 
+Returns plot data if enabled 
+  Vector 0 is time
+  Vectors 1 onward are ADC readings          
+      
+Included in slab.py       
+See also setWaveFrequency, setTransientStorage and setPlotReturnData
+@highPeak@
+highPeak(vector)
+Returns the maximum of a vector
+Included in slab.py 
+@lowPeak@
+lowPeak(vector)
+Returns the minimum of a vector
+Included in slab.py 
+@peak2peak@
+peak2peak(vector)
+Returns the maximum to minimum difference of a vector
+Included in slab.py 
+@mean@
+mean(vector)
+Returns the mean value of a vector
+Included in slab.py 
+@halfRange@
+halfRange(vector)
+Returns the average between maximum and minimum of a vector
+Included in slab.py 
+@rms@
+rms(vector)
+Returns the RMS value of a vector
+Included in slab.py 
+@std@
+std(vector)
+Returns the standard deviation of a vector
+Included in slab.py 
+@softReset@
+softReset()
+Generates a soft reset on the hardware board
+Board state is set to reset condition
+Returns nothing
+Included in slab.py 
+@dioMode@
+dioMode(line,mode)
+Configures a digital I/O line mode
+
+Possible modes are:
+      mInput : Normal input mode
+     mPullUp : Input with Pull Up
+   mPullDown : Input with Pull Down
+     mOutput : Output Push Pull
+  mOpenDrain : Output with Open Drain
+  
+Modes use the slab namespace
+
+Required parameter:
+  line : Line to configure
+  
+Optional parameter:
+  mode : Mode to configure (Defaults to mInput)
+
+Returns nothing  
+Included in slab.py 
+@dioWrite@
+dioWrite(line,value)
+Writes on a digital I/O line mode
+
+Required parameters:
+   line : Line to write
+  value : Value to write (True of False)
+
+Returns nothing 
+Included in slab.py  
+@dioRead@
+dioRead(line)
+Reads a digital I/O line mode
+
+Required parameter:
+   line : Line to read
+
+Returns state (True of False)
+Included in slab.py   
+@dc@
+DC Submodule command topics:
+
+  curveVV
+  curveVVref
+  hystVVcurve
+  curveVI
+  curveVIref
+  curveVIbridge
+  transferCurveVI
+  transferCurveII
+  vDeviceCurve
+  iDeviceCurve
+  plotVI
+@plotVI@
+plotVI(x,y,r,title,xl,yl)
+Plots I(V) for a Device Under Test (DUT)
+
+The following circuit shall be used
+
+<X>----<R>----<Y>----<DUT>----GND
+
+X is voltage in a series connection of resistor and DUT
+Y is common node voltage between R and DUT
+
+Required parameters:
+   x : Vector with voltages
+   y : Vector with voltage at common node
+   r : Resistor value (in k Ohm)
+   
+Optional parameters:
+    title : Plot title
+       xt : Label for x axis
+       yt : Label for y axis
+
+Returns nothing  
+Included in slab_dc.py      
+@curveVI@
+curveVI(v1,v2,vi,r,wt,returnData)
+Plots I(V) Device Curve
+
+Perform a I(V) curve for a two terminal component
+The following circuit shall be used
+
+<DAC1>---ADC1---<R>---<ADC2>---<DUT>---GND
+
+DAC1 forces a voltage in a series connection of resistor and DUT
+ADC1 reads the voltage forced bu DAC1
+ADC2 reads the voltage in the common node between R and DUT
+
+Required parameters:
+  v1 : Initial value of A2 (in Volt)
+  v2 : End of range (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)
+  r  : Resistor value in kohms (defaults to 1k)
+  wt : Waiting time between steps (defaults to 0.1s)
+  returnData : Enable return of plot data (Defaults to False)
+  
+Returns plot data if enabled (see also setPlotReturnData) 
+Included in slab_dc.py 
+@curveVIref@
+curveVIref(v1,v2,vi,r,vr,wt,returnData)
+Plots I(V) Device Curve with reference
+
+Perform a I(V) curve for a two terminal component
+The following circuit shall be used
+
+<DAC1>---<ADC1>---<DUT>---ADC2--+--<R>-----<Vdd>
+                                |
+                                +--<R>-----<GND>          
+                               
+DAC1 forces a voltage on the positive terminal of the DUT
+ADC1 reads the voltage forced by DAC1
+ADC2 reads the voltage in negative terminal of the DUT
+Device voltage Vd is calculated as Vadc1 - Vadc2
+Device current Id is calculated as 2(Vdac2 - Vdd/2)/R
+
+Required parameters:
+  v1 : Initial value of DAC1 (in Volt)
+  v2 : End of range (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)
+  r  : Resistor value in kohms (defaults to 1k)
+  vr : Reference voltage (defaults to Vdd/2)
+  wt : Waiting time between steps (defaults to 0.1s)
+  returnData : Enable return of plot data (Defaults to False)
+  
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab_dc.py
+@curveVIbridgeOld@
+curveVIbridge(v1max,v2max,vi=0.1,r=1.0,wt=0.1,returnData)
+Plot I(V) Device Curve in bridge configuration
+
+Perform a I(V) curve for a two terminal component
+The following circuit shall be used
+
+<DAC1>--<ADC1>---<R>---<ADC2>----<DUT>----<ADC3>----<DAC2>
+
+Curve is measured in two sequences:
+
+In the first sequence, DAC2 is set to zero
+DAC1 forces a voltage in a series connection of resistor and DUT
+ADC1 reads the voltage in the common node between R and DUT
+Device voltage Vd is calculated as Vdac1 - Vr
+Device current Id is calculated as (Vdac1 - Vadc1)/R
+This first sequence is the same than in the curveVI command
+
+In the second sequence, DAC1 is set to zero
+DAC2 forces a voltage 
+ADC1 reads the voltage in the common node between R and DUT
+
+Required parameters:
+  v1max : Max voltage at DAC 1 (in Volt)
+  v2max : Max voltage at DAC 2 (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)
+  r  : Resistor value in kohms (defaults to 1k)
+  wt : Waiting time between steps (defaults to 0.1s)
+  returnData : Enable return of plot data (Defaults to False)     
+     
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab_dc.py
+@curveVIbridge@
+curveVIbridge(v1max,v2max,vi=0.1,vmin,r,wt,returnData)
+Plot I(V) Device Curve in bridge configuration
+
+Perform a I(V) curve for a two terminal component
+The following circuit shall be used
+
+<DAC1>--<ADC1>---<R>---<ADC2>----<+DUT->----<ADC3>----<DAC2>
+
+Curve is measured in two sequences:
+
+In the first sequence, DAC2 is set to vmin
+DAC1 forces a voltage in a series connection of resistor and DUT
+ADC1 reads the voltage in the common node between R and DUT
+Device voltage Vd is calculated as Vadc2 - Vadc3
+Device current Id is calculated as (Vadc1 - Vadc2)/R
+This first sequence is the same than in the curveVI command
+
+In the second sequence, DAC1 is set to vmin
+DAC2 forces a voltage 
+Measurements are the same
+
+Required parameters:
+  v1max : Max voltage at DAC 1 (in Volt)
+  v2max : Max voltage at DAC 2 (in Volt)
+  
+Optional parameters:  
+    vi : Step (defaults to 0.1V)
+  vmin : Min DAC voltage (Defaults to 0 V)
+    r  : Resistor value in kohms (defaults to 1k)
+    wt : Waiting time between steps (defaults to 0.1s)
+  returnData : Enable return of plot data (Defaults to False)     
+     
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab_dc.py
+@curveVV@
+curveVV(v1,v2,vi,wt,adc2,returnData)
+Plots a V(V) transfer curve
+
+The following circuit shall be used
+
+DAC1----<DUT In>  <DUT Out>-----ADC1
+
+Vi is forced using the DAC1 
+Vo is read at ADC1
+
+Required parameters: 
+  v1 : Initial value (in Volt)
+  v2 : End of range (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)  
+  wt : Waiting time between steps (defaults to 0.1s)
+  adc2 : Use ADC2 to measure Vi (defaults to False)
+  returnData : Enable return of plot data (Defaults to False)   
+  
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab_dc.py
+@curveVVref@
+curveVVref(v1,v2,vi,wt,adc3,returnData)
+Plots a V(V) trasnfer curve with reference
+
+Perform a Vo(Vi) curve using a ground reference
+The following circuit shall be used
+
+<DAC1>---<DUT In>  <DUT Out>---<ADC1>   <Ref>----<ADC2>
+
+Vr is measured with ADC2
+Vi is forced using the DAC1 and calculated as Vdac1 - Vref
+Vo is read at ADC1 and calculated as Vadc2 - Vref
+
+Required parameters: 
+  v1 : Initial value (in Volt)
+  v2 : End of range (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)  
+  wt : Waiting time between steps (defaults to 0.1s)
+  adc3 : Use ADC3 to sense Vi (Defaults to False)
+  returnData : Enable return of plot data (Defaults to False)   
+  
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab_dc.py
+@curveVVbridge@
+curveVVbridge(vp,vn,vi,vmin,wt,returnData)
+Plots a V(V) transfer curve in bridge configuration
+
+The following circuit shall be used
+
+DAC1---<ADC1>---<DUT In+>   <DUT Out>-----ADC3
+DAC2---<ADC2>---<DUT In->   <DUT GND>-----ADC4
+
+In+  is forced using DAC1 and read with ADC1 
+In-  is forced using DAC2 and read with ADC2
+Vo  is read at ADC3
+GND is read at ADC4
+
+Required parameters: 
+  vp : Maximum positive voltage (in Volt)
+  vn : Maximum negative voltage (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)  
+  vmin : Minimum DAC voltage (Defaults to 0.0) 
+  wt : Waiting time between steps (defaults to 0.1s)
+  returnData : Enable return of plot data (Defaults to False)   
+  
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab_dc.py
+@transferCurveVI@
+transferCurveVI(v1,v2,vi,ro,wt,returnData)
+Plots a I(V) Transfer Curve
+
+The following circuit shall be used
+
+<DAC1>---<Ri>---<ADC1>---<DUT In>
+
+<Vdd>----<Ro>---<ADC2>---<DUT Out>
+
+Ri is used to limit current and can be zero if needed. 
+Show current entering DUT Out repect to ADC1 voltage
+
+Required parameters:
+  v1 : Initial value of DAC1 (in Volt)
+  v2 : End of range (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)
+  ro : Resistor Ro value in kohms (defaults to 1k)
+  wt : Waiting time between steps (defaults to 0.1s)
+  returnData : Enable return of plot data (Defaults to False)    
+  
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab_dc.py
+@transferCurveII@
+transferCurveII(v1,v2,vi,r1,r2,wt,returnData)
+Plots a I(I) transfer curve
+
+The following circuit shall be used
+
+<DAC1>---<R1>---<ADC1>---<DUT In>
+
+<Vdd>----<R2>---<ADC2>---<DUT Out>
+
+Show current entering DUT Out repect to current entering DUT In
+
+Required parameters:
+  v1 : Initial value of DAC1 (in Volt)
+  v2 : End of range (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)
+  wt : Waiting time between steps (defaults to 0.1s)
+  r1 : Resistor R1 value in kohms (defaults to 1k)
+  r2 : Resistor R2 value in kohms (defaults to 1k)
+  returnData : Enable return of plot data (Defaults to False)    2
+  
+Returns plot data if enabled (see also setPlotReturnData)
+Included in slab_dc.py
+@vDeviceCurve@
+vDeviceCurve(vi1,vi2,vii,vo1,vo2,voi,ro,wt)
+Measures and plots V Device Output Curves
+
+Draws curves for a device with voltage input
+The following circuit shall be used:
+
+<DAC2>---<Ri>---<ADC1>----<DUT1>
+
+<DAC1>---<Ro>---<ADC2>----<DUT2>
+
+R1 is used to limit current but it can be ommited
+
+Required parameters:
+  vi1 : Initial voltage for input (DAC2)
+  vi2 : End of range for input
+  vii : Step for input
+  vo1 : Initial voltage for output (DAC1)
+  vo2 : End of range for output
+  
+Optional parameters:  
+  voi : Step for output (Defaults to 0.1V)
+   ro : Output resistance in kohms (Defaults to 1k)
+   wt : Wait time between measurements (Defaults to 0.1s)
+ 
+Returns nothing
+Included in slab_dc.py
+@iDeviceCurve@
+iDeviceCurve(vi1,vi2,vii,vo1,vo2,voi,ri,ro,wt)
+Measures and plots I Device Output Curves
+
+Draws curve for a device with current input
+The following circuit shall be used:
+
+<DAC2>----<Ri>---<ADC1>---<DUT1>
+
+<DAC1>---<ADC2>---<Ro>---<ADC3>---<DUT2>
+
+Required parameters:
+  vi1 : Initial voltage for input 
+  vi2 : End of range for input
+  vii : Step for input
+  v01 : Initial voltage for output 
+  v02 : End of range for output
+  
+Optional parameters:  
+  voi : Step for output
+   ri : Input resistance
+   ro : Output resistance
+   wt : Wait time between measurements (default to 0.1s)
+   
+Returns nothing
+Included in slab_dc.py  
+@hystVVcurve@
+hystVVcurve(v1,v2,vi,wt,returnData)
+V(V) Transfer Hysteresis Curve
+
+The following circuit shall be used
+
+<DAC1>----<DUT In>  <DUT Out>-----<ADC1>
+
+Vi is forced using the DAC1 
+Vo is read at ADC1
+
+Required parameters: 
+  v1 : Initial value (in Volt)
+  v2 : End of range (in Volt)
+  
+Optional parameters:  
+  vi : Step (defaults to 0.1V)  
+  wt : Waiting time between steps (defaults to 0.1s)
+  returnData : Enable return of plot data (Defaults to False)    
+  
+Returns plot data if enabled (see setPlotReturnData)
+Included in slab_dc.py    
+@ac@
+AC Submodule command topics: 
+ 
+   f2w
+   w2f
+   dB
+   magnitudePhase
+   abs
+   sineGain
+   sineGainAll
+   bodeResponse
+   logRange
+   plotFreq
+   plotBode
+   freqResponse
+   freqResponseAll
+@f2w@
+f2w(f)
+Converts frequency from Hz to rad/s
+Returns frequency in rad/s 
+Included in slab_ac.py  
+@w2f@
+w2f(w)
+Converts frequency from rad/s to Hz
+Returns frequency in Hz
+Included in slab_ac.py  
+@logRange@
+logRange(start,end,ndec,ppd)
+Generates a logarithmic spaced range of values
+
+Parameters:
+  start : start value
+    end : end value
+   ndec : number of decades
+    ppd : points per decade  (defaults to 10)
+    
+Either the end or the ndec parameters must be supplied    
+    
+Returns a vector or values
+Included in slab_ac.py    
+    
+Examples      
+    >> f = logRange(fstart,fend)           # Range with default 10 ppd
+    >> f = logRrange(fstary,fend,ppd=20)   # Range with 20 ppd
+    >> f = logRrange(fstart,ndec=4)        # 4 decades with default 10 ppd
+    >> f = logRange(fstrat,ndec=4,ppd=5)   # 4 decades with custom ppd
+@magPhase@
+magPhase(value)
+Computes magnitude and phase (deg) from complex value
+Returns a tuple of magitude,phase
+Included in slab_ac.py
+@mag@
+mag(value)
+Computes the absolute value (magnitude) from complex or real value
+Returns a real magnitude value
+Included in slab_ac.py
+@phase@
+phase(value)
+Computes the phase (deg) from complex value
+Returns a real phase value
+Included in slab_ac.py
+@dB@
+dB(value)
+Converts linear gain to dB
+Returns dB value
+Included in slab_ac.py
+@plotFreq@
+plotFreq(f,v,labels)
+Draws a frequency plot using a linear frequency axis
+
+Required parameters
+    f : Frequency vector or list of vectors (Hz)
+    v : Complex vector or list of vectors
+    
+Optional parameters:
+  labels : Labels for each curve
+  
+Returns nothing
+Included in slab_ac.py  
+    
+If f and g are vectors only a curve is drawn
+If f and g are lists of vectors, several curves will be drawn    
+@plotBode@
+plotBode(f,g,labels,linear)
+Draws a bode plot
+It uses a logarithmic frequency axe
+By default it uses dB for the magnitude
+
+Required parameters
+    f : Frequency vector or list of vectors (Hz)
+    g : Gain vector or list of vectors (Complex)
+    
+Optional parameters:
+  labels : Labels for each curve
+  linear : Use linear vertical axis instead of dB
+  
+Returns nothing
+Included in slab_ac.py  
+    
+If f and g are vectors only a curve is drawn
+If f and g are lists of vectors, several curves will be drawn    
+@sineGain@
+sineGain(v1,v2,freq,channel,npre,maxfs)
+Calculates complex gain for a give frequency
+Signal is generated at DAC1 and output is read at ADC1
+
+Required parameters:
+    v1 : min value of signal
+    v2 : max value of signal
+  freq : frequency (Hz)
+  
+Optional parameters:  
+ channel : ADC channel to read (defaults to 1)
+    npre : number of cycles before measurement (defaults to 5)
+   maxfs : max sample frequency (at least 10*freq) 
+           (Defaults to maximum reported by board)
+        
+Returns complex gain
+Included in slab_ac.py        
+@sineGainAll@
+sineGainAll(v1,v2,freq,npre,maxfs)
+Calculates complex gain for a give frequency
+Signal is generated at DAC1 and output is read at all ADCs
+
+Required parameters:
+    v1 : min value of signal
+    v2 : max value of signal
+  freq : frequency (Hz)
+  
+Optional parameters:  
+    npre : number of cycles before measurement (defaults to 5)
+   maxfs : max sample frequency (at least 10*freq) 
+           (Defaults to maximum reported by board)
+        
+Returns list of complex gains (one for each ADC)
+Included in slab_ac.py        
+@freqResponse@
+freqResponse(v1,v2,fvector,channel,npre,maxfs):
+Obtain the frequency response of a circuit
+Signal is generated at DAC1 and output is read at ADC1
+
+Required parameters:
+       v1 : min value of signal
+       v2 : max value of signal
+  fvector : vector of frequencies to test
+  
+Optional parameters:  
+ channel : Channel to measure (defaults to 1)
+    npre : number of cycles before measurement (defaults to 5)
+   maxfs : max sample frequency (at least 10*freq) 
+          (Defaults to maximum reported by board)
+    
+Returns a vector of complex gains
+Included in slab_ac.py    
+@freqResponseAll@
+freqResponseAll(v1,v2,fvector,npre,maxfs):
+Obtain the frequency response of a circuit for all channels
+Signal is generated at DAC1 and output is read at all ADCs
+
+Required parameters:
+       v1 : min value of signal
+       v2 : max value of signal
+  fvector : vector of frequencies to test
+  
+Optional parameters:  
+    npre : number of cycles before measurement (defaults to 5)
+   maxfs : max sample frequency (at least 10*freq) 
+          (Defaults to maximum reported by board)
+    
+Returns a vector of complex gains
+Included in slab_ac.py   
+@bodeResponse@
+bodeResponse(v1,v2,fmin,fmax,ppd,channel,npre,maxfs,returnData)
+Measures and draws a bode plot
+
+Required parameters:
+       v1 : min value of signal
+       v2 : max value of signal
+     fmin : minimum frequency
+     fmax : maximum frequency
+      
+Optional parameters:  
+     ppd : number of points per decade (defaults to 10)
+ channel : ADC channel to use (defaults to 1)
+    npre : number of cycles before measurement (defaults to 5)
+   maxfs : max sample frequency (at least 10*freq) 
+           (Defaults to maximum reported by board)
+ returnData : Enable return of plot data (Defaults to False)           
+ 
+Returns plot data if enabled (see also setPlotReturnData) 
+    Tuple of two elements:
+        Frequencies vector
+        Complex gains vector
+
+Included in slab_ac.py
+@meas@
+Measure wave submodule command topics:
+
+   analyze
+   period
+   tcross
+@tcross@
+tcross(vector,value,mode,time,ts)
+Determine the times when a vector crosses a value
+
+Required parameters:
+  vector : Sequence of values
+   value : Value to cross
+   
+Optional parameters:   
+    mode : Cross mode tmodeRise (Default) or tmodeFall
+    time : Optional time vector
+      ts : Optional sample time  
+
+Returns a vector of cross instants:
+    Times if time vector is provided
+    Time from Ts if provided
+    Indexes if no time or Ts is provided 
+
+Included in slab_meas.py    
+@period@
+period(vector,time,ts,mode)
+Compute the period of a signal
+
+Period is computed from signal crossings at the halrange
+
+Required parameters:
+  vector : Sequence of values
+   
+Optional parameters:   
+    time : Optional time vector
+      ts : Optional sample time  
+    mode : Cross mode tmodeRise (Default) or tmodeFall      
+
+Returns a the mean period using:
+    time vector if provided
+    Ts if provided
+    Samples indexes if no time or Ts is provided 
+
+Included in slab_meas.py    
+@analyze@
+analyze(data)
+Analize signal data and show results on screen
+
+Optional parameters:
+    data : data tuple to analyze
+              Pos 0 : Time vector
+              Pos 1 onward : Signal value vectors 
+              
+If data is not provided, a transientAsync command will be performed 
+
+Returns nothing
+Included in slab_meas.py         
+@fft@
+FFT Submodule command topics:  
+
+   ftransform
+   distortion
+@ftransform@
+ftransform(signal,time,ts)
+Transforms from time to frequency domain
+Uses the FFT of a signal but:
+ 1) Only positive frequencies are provided
+ 2) Factor 2/N applied except for DC that use 1/N
+
+Parameters:
+ signal : Signal to transform
+   time : Time vector
+     ts : Sample time
+     
+If neither time nor ts is provided, the command
+will use the current sample time
+
+Returns a tuple with:
+   Complex amplitude vector
+   Frequency vector
+   
+Included in slab_fft.py
+@distortion@
+distortion(v1,v2,freq,show)
+Generates sine wave at DAC1
+Reads circuit output adt ADC1
+Calculates four values related to distortion
+Noise floor limits measurements
+
+Required parameters:
+    v1 : Minimum value of sine
+    v2 : Maximum value of sine
+  freq : Sine frequency
+  
+Optional parameters:
+  show : Select if plots and text are shown
+         (Defaults to True)
+  
+Returs a four element tuple:
+   1) THD          (%)
+   2) THD+ N       (%)   
+   3) 2nd Harmonic (dBc)
+   4) 3rd Harmonic (dBc)
+   
+Included in slab_fft.py
+@ez@
+EZ Submodule 
+
+Commands common to slab.py:
+   help
+   readVoltage
+   setVoltage
+   dcPrint
+   zero
+   
+EZ command topics: 
+   liveVoltage
+   sweepPlot
+   ioCurve
+   bridgeCurve
+   sineResponse
+   triangleResponse
+   squareResponse
+   sineBridgeResponse
+
+@liveVoltage@
+liveVoltage()
+Shows live ADC voltage values
+Use CRL+C to exit
+Included in slab_ez.py
+@sweepPlot@
+sweepPlot(v1=0.0,v2=3.0,vi=0.1)
+Plots ADC values for a sweep of DAC1 values
+
+Optional parameters:
+  v1 : Sweep start (Defaults to 0V)
+  v2 : Sweep end (Defaults to 3V)
+  vi : Sweep increment (Defaults to 0.1V)
+@sineResponse@
+sineResponse(vmin,vmax,freq)
+Shows the response against a sine wave
+DAC 1 and ADC 1 at input
+ADC 2, 3 and 4 as outputs
+
+Optional parameters:
+  vmin : Wave minimum (Defaults to 1V)
+  vmax : Wave maximum (Defaults to 2V)
+  freq : Wave frequency (<150Hz)
+         Defaults to 100 Hz
+
+Included in slab_ez.py
+@triangleResponse@
+triangleResponse(vmin,vmax,freq)
+Shows the response against a triangular wave
+DAC 1 and ADC 1 at input
+ADC 2, 3 and 4 as outputs
+
+Optional parameters:
+  vmin : Wave minimum (Defaults to 1V)
+  vmax : Wave maximum (Defaults to 2V)
+  freq : Wave frequency (<150Hz)
+         Defaults to 100 Hz
+
+Included in slab_ez.py
+@squareResponse@
+squareResponse(v1,v2,freq)
+Shows the response against a square wave
+DAC 1 and ADC 1 at input
+ADC 2, 3 and 4 as outputs
+
+Optional parameters:
+    v1 : Start value (Defaults to 1V)
+    v2 : Value after step (Defaults to 2V)
+  freq : Wave frequency (<150Hz)
+         Defaults to 100 Hz
+
+Included in slab_ez.py
+@sineBridgeResponse@
+sineBridgeResponse(vmax,freq)
+Shows the response against a sine wave
+Input between DAC1+ADC1 and DAC2+ADC2
+Output between ADC3 and ADC4
+
+Optional parameters:
+  vmax : Wave maximum (Defaults to 3V)
+  freq : Wave frequency (<150Hz)
+         Defaults to 100 Hz
+
+Included in slab_ez.py
+@trendPlot@
+trendPlot()
+Shows all ADCs evolution with time
+
+Optional parameters:
+  n : Number of ADCs to show (defaults to 4)
+
+Included in slab_ez.py
+@ioCurve@
+ioCurve()
+Draws an input to output DC curve
+Input is between DAC1+ADC1 and GND with 0V to 3V range
+Output is between ADC2 and GND
+Included in slab_ez.py
+@bridgeCurve@
+bridgeCurve()
+Draws an input to output dc curve in bridge mode
+Input is between DAC 1 and DAC 2 with a +/-3V range
+and read between ADC 1 and ADC 2
+Output is read between ADC 3 and 4
+Included in slab_ez.py
+@# EOF
