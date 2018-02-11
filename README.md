@@ -28,4 +28,4 @@ Information about this projects will be posted on my two blogs:
    R6500 http://r6500.blogspot.com.es/ (In English)
    AIM65 http://aim65.blogspot.com.es/ (In Spanish)
    
-    
+The full, current 1.2 version, of SLab is included in the "SLab v1.2 (11-02-2018).zip" file    
