@@ -1,0 +1,74 @@
+PCBNEW-LibModule-V1  03/05/2017 10:12:16
+# encoding utf-8
+Units mm
+$INDEX
+Hole30
+Hole40
+Pin30
+Pin40
+$EndINDEX
+$MODULE Hole30
+Po 0 0 0 15 5909903B 00000000 ~~
+Li Hole30
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -1.27 1 1 0 0.15 N V 21 N "Hole30"
+T1 0 1.27 1 1 0 0.15 N V 21 N "VAL**"
+$PAD
+Sh "1" C 0.762 0.762 0 0 0
+Dr 0.762 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 0 0
+$EndPAD
+$EndMODULE Hole30
+$MODULE Hole40
+Po 0 0 0 15 590990D4 00000000 ~~
+Li Hole40
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -1.27 1 1 0 0.15 N V 21 N "Hole40"
+T1 0 1.27 1 1 0 0.15 N V 21 N "VAL**"
+$PAD
+Sh "1" C 1.016 1.016 0 0 0
+Dr 1.016 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 0 0
+$EndPAD
+$EndMODULE Hole40
+$MODULE Pin30
+Po 0 0 0 15 58F76308 00000000 ~~
+Li Pin30
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -1.27 1 1 0 0.15 N V 21 N "Pin30"
+T1 0 1.27 1 1 0 0.15 N V 21 N "VAL**"
+$PAD
+Sh "1" C 1.778 1.778 0 0 0
+Dr 0.762 0 0
+At STD N 00C0FFFF
+Ne 0 ""
+Po 0 0
+$EndPAD
+$EndMODULE Pin30
+$MODULE Pin40
+Po 0 0 0 15 58F75F7B 00000000 ~~
+Li Pin40
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -2.54 1 1 0 0.15 N V 21 N "Pin40"
+T1 0 2.54 1 1 0 0.15 N V 21 N "VAL**"
+$PAD
+Sh "1" C 1.778 1.778 0 0 0
+Dr 1.016 0 0
+At STD N 00C0FFFF
+Ne 0 ""
+Po 0 0
+$EndPAD
+$EndMODULE Pin40
+$EndLIBRARY
