@@ -1,0 +1,418 @@
+This document describes the communication protocol between
+Python and the Hardware Board
+
+Protocol is Client/Server
+The board operates as the server and responds to requests 
+from the Python code in n a PC
+
+All communications use a simple XOR on all bytes to generate
+the CRC. The CRC is the last byte send in any transmission.
+
+Format of data:
+byte  : 1 Byte
+u16   : 2 Bytes little endian ( L followed by H)
+float : 3 Bytes : Byte : Exponent Offset   128
+                  u16  : Mantissa Offset 20000
+
+Before each command:
+
+        P : init P-TxCRC,P-RxCRC
+        B : init B-RxCRC,B-TxCRC 
+
+COMMANDS ---------------------------------------------------
+
+Command 'F' Get Firmware String
+            This command is the only one without CRC
+
+   P -> B : byte('F')
+   B -> P : Firmware String than ends with "\n\r"
+    
+            
+Command 'M' Get Magic Code
+
+   P -> B : byte('M')
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+              B -> P : B-TxCRC 
+                   P : Check CRC
+            else
+              B -> P : ACK
+              B -> P : 4 byte magic code         
+                       B-TxCRC
+                   P : Check CRC
+                   P : Check Magic
+    
+                
+Command 'I' Get Board Capabilities
+
+   P -> B : byte('I')
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+              B -> P : B-TxCRC 
+                   P : Check CRC
+            else
+              B -> P : ACK
+              B -> P : byte(Number of DACs)
+                       byte(Number of ADCs)
+                       u16(Unified Buffer Size)
+                       float(Max Sample Time)
+                       float(Min Sample Time)
+                       float(VDD) 
+                       float(Max Sample Freq)
+                       float(VREF)
+                       byte(dac_bits)
+                       byte(adc_bits)
+                       B-TxCRC
+                       
+
+Command 'L' Get Pin List
+
+   P -> B : byte('L')
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+              B -> P : B-TxCRC 
+       
+            else    
+              B -> P : ACK
+                       Pin list String that ends with $
+                       B-TxCRC
+                   
+Command 'A' ADC Read
+
+   P -> B : byte('A')
+            byte(channel)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC 
+                  
+            else if not valid channel
+              B -> P : NACK    
+                       B-TxCRC
+                       
+            else
+              B -> P : ACK
+                       U16(Read ADC Value)
+                       B-TxCRC                                            
+              
+              
+Command 'D' DAC Write
+
+   P -> B : byte('D')
+            byte(channel)
+            u16(value)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC 
+                       
+            else if not valid channel
+              B -> P : NACK    
+                       B-TxCRC
+            else
+              B -> P : ACK
+                       B-TxCRC
+                       
+                       
+Command 'R' Set Sample Time                                                           
+
+   P -> B : byte('R')
+            float(Sample Time)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC   
+                       
+            else if not valid sample time                 
+              B -> P : NACK    
+                       B-TxCRC
+                                              
+            else
+              B -> P : ACK
+                       B-TxCRC                         
+        
+              
+Command 'S' Set Storage                                                           
+
+   P -> B : byte('S')
+            byte(Number Analog)
+            byte(Number Digital)
+            U16(Number Samples)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC     
+                       
+            else if not valid
+              B -> P : NACK
+                       B-TxCRC
+                      
+            else
+              B -> P : ACK
+                       B-TxCRC                      
+
+
+Command 'Y' Async Read
+
+   P -> B : byte('Y')
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC  
+            else
+              B -> P : ACK
+                       <Dump In Buffer>
+                       B-TxCRC            
+
+
+Command 'G' Triggered Read
+
+   P -> B : byte('G')
+            U16(Trigger)
+            Byte(mode)
+            Byte(timeout)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC  
+                 
+            else if bad mode
+              B -> P : NACK           
+                       B-TxCRC
+                       
+            else
+              B -> P : ACK
+                       <Dump Triggered In Buffer>
+                       B-TxCRC  
+
+
+
+Command 'P' Step Response
+
+   P -> B : byte('P')
+            U16(Step Value)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC  
+        
+            else
+              B -> P : ACK
+                       <Dump In Buffer>
+                       B-TxCRC               
+  
+
+
+Command 'W' Load Wavetable
+
+   P -> B : byte('W')
+            U16(Table Size)
+            
+            if bad Table Size           
+              B -> P : NACK
+                       B-TxCRC
+                       
+            else
+              P -> B : Table of U16 values
+                   B : if P-CRC != B-RxCRC
+                         B -> P : ECRC
+                         B-TxCRC  
+              
+              B -> P : ACK
+                       B-TxCRC           
+ 
+Command 'w' Load Secondary Wavetable
+
+   P -> B : byte('W')
+            U16(Table Size)
+            
+            if bad Table Size        
+              B -> P : NACK
+                       B-TxCRC
+                       
+            else
+              P -> B : Table of U16 values
+                   B : if P-CRC != B-RxCRC
+                         B -> P : ECRC
+                         B-TxCRC  
+              
+              B -> P : ACK
+                       B-TxCRC            
+
+Command 'V' Wave Response
+
+   P -> B : byte('V')
+            U16(Number of Waves)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC    
+                     
+            else 
+              B -> P : ACK
+                       <Dump In buffer>
+                       B-TxCRC
+                       
+Command 'v' Dual Wave Response
+
+   P -> B : byte('V')
+            U16(Number of Waves)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC           
+            else 
+              B -> P : ACK
+                       <Dump In buffer>
+                       B-TxCRC                       
+ 
+Command 'Q' Wave Play
+
+   P -> B : byte('Q')
+            U16(Number of Waves)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC               
+            else 
+              B -> P : ACK
+                       if halt TRAN_HALT
+                          else TRAN_OK
+                       B-TxCRC    
+                       
+Command 'q' Dual Wave Play
+
+   P -> B : byte('q')
+            U16(Number of Waves)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC               
+            else 
+              B -> P : ACK
+                       if halt TRAN_HALT
+                          else TRAN_OK
+                       B-TxCRC                          
+ 
+Command 'X' Single Wave Response
+
+   P -> B : byte('X')
+            Byte(Channel to read)
+            U16(Number of Waves)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC    
+                     
+            else 
+              B -> P : ACK
+                       <Dump In buffer>
+                       B-TxCRC                                               
+ 
+Command 'E' Soft Reset
+
+   P -> B : byte('E')
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC
+            else               
+              B -> P : ACK    
+                       B-TxCRC
+     
+Command 'H' Digital I/O Mode
+
+   P -> B : byte('H')
+            byte(line)
+            byte(mode)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC 
+                       
+            else if not valid channel or mode
+              B -> P : NACK    
+                       B-TxCRC
+            else
+              B -> P : ACK
+                       B-TxCRC    
+                       
+Command 'J' Digital I/O Write
+
+   P -> B : byte('J')
+            byte(line)
+            byte(value)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC 
+                       
+            else if not valid channel
+              B -> P : NACK    
+                       B-TxCRC
+            else
+              B -> P : ACK
+                       B-TxCRC       
+                       
+Command 'K' Digital I/O Read
+
+   P -> B : byte('J')
+            byte(line)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC 
+                       
+            else if not valid channel
+              B -> P : NACK    
+                       B-TxCRC
+            else
+              B -> P : ACK
+                       byte(line value)
+                       B-TxCRC                                            
+        
+Command 'N' Number of ADC readings
+
+   P -> B : byte('N')
+            u16(n)
+            P-TxCRC
+        B : if P-CRC != B-RxCRC
+              B -> P : ECRC
+                       B-TxCRC 
+            else
+              B -> P : ACK
+                       B-TxCRC           
+        
+<Dump In Buffer>
+   if halt
+      B -> P : TRAN_HALT
+
+   if overrun
+      B -> P : TRAN_OVERRUN
+      
+   else
+      B -> P : TRAN_OK
+               Byte(Number Analog)
+               Byte(Number Digital)
+               U16(Number Samples)
+               All Samples in U16
+               
+<Dump Triggered In Buffer>
+   if halt
+      B -> P : TRAN_HALT
+      
+   if overrun
+      B -> P : TRAN_OVERRUN
+      
+   if timeout
+      B -> P : TRAN_TIMEOUT   
+      
+   else
+      B -> P : TRAN_OK
+               Byte(Number Analog)
+               Byte(Number Digital)
+               U16(Number Samples)
+               All Samples in U16
