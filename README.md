@@ -3,18 +3,18 @@ Small Lab project for low buget hands-on electronics learning
 
 SLab is composed on three main components:
 
-1) Hardware
+1) Hardware:
     One low cost demonstration board that include, at least, two DACs and four ADC inputs
     Some electronics, at least 6 opamps, to provide some buffering
     
-2) Software
+2) Software:
     Two software packages:
     
        a) Firmware code to be downloaded on the demonstration board
        
        b) Python code that interacts with the board
        
-3) Documentation
+3) Documentation:
     Documentation is also divided in two kind of documents
     
        a) SLab setup and reference documentation
