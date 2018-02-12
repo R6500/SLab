@@ -1,5 +1,5 @@
 # SLab
-Small Lab project for low buget on hands electronics learning
+Small Lab project for low buget hands-on electronics learning
 
 SLab is composed on three main components:
 
