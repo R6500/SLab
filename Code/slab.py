@@ -10,8 +10,14 @@ Version 1.0 : First version
             than ADC input. 
             ADC can be calibrated against DAC.
             
-10/2/2018 : Addition to halt response code            
+10/2/2018 : Addition to halt response code   
+
+Version 1.1 : Added Python 3 compatibility
+
+ 1/3/2018 : Added compatibility with python 3         
 '''
+
+from __future__ import print_function
  
 ###################### INFO FOR THE HELP FILE ###################################
 
@@ -172,6 +178,25 @@ import numbers        # Numbers module
 import glob
 import warnings       # Warnings module
 
+################# PYTHON VERSION CHECK ###########################
+
+'''
+Check if we are running on Python 2.x or 3.x
+'''
+
+PY3 = False
+if sys.version_info >= (3,0):
+    PY3 = True
+    print("Python 3.0 or later detected")
+    
+'''
+Set input both in python2 and python3
+'''    
+try:
+   input = raw_input
+except NameError:
+   pass    
+
 ##################### LINUX CHECK ################################
 
 '''
@@ -196,9 +221,10 @@ else:
 # The "TkAgg" backend is selected out of linux because in default
 # operation the console goes very slow after plotting
 try:		
-    import matplotlib
-    if not linux:
-       matplotlib.use("TkAgg")    
+    if not PY3: # Needed so it does not crash Python 3.x
+        if not linux:
+            import matplotlib
+            matplotlib.use("TkAgg")    
     import numpy as np                # Numpy for math calculations
     import pylab as pl                # Pylab and Mathplotlib for plotting
     import matplotlib.pyplot as plt
@@ -210,8 +236,8 @@ else:
 	   
 # Version information
 version_major = 1
-version_minor = 0
-version_date  = "10/2/2018"
+version_minor = 1
+version_date  = "1/3/2018"
 
 # Default baud rate
 BAUD_RATE = 38400
@@ -238,11 +264,11 @@ class SlabEx(Exception):
     # Exception Methods ----------------------------------
     def __init__(self, msg=""):
         self.msg = msg
-        print "\n** SLab exception"
-        print '** ' + msg 
-        print "\n"    
+        print("\n** SLab exception")
+        print('** ' + msg)
+        print("\n")    
         if not interactive:
-            raw_input("Hit RETURN to end the script")
+            input("Hit RETURN to end the script")
             
     def __str__(self):
         return repr(self.code)
@@ -260,9 +286,9 @@ nwarns = 0  # No warnings yet
 def warn(message):
     global nwarns
     if verbose > 0:
-        print "\n** WARNING"
-        print "** " + message
-        print 
+        print("\n** WARNING")
+        print("** " + message)
+        print()
     nwarns = nwarns + 1
                 
 # Board specific data        
@@ -386,7 +412,10 @@ Usually that ends the Tx transmission
 '''    
 def sendCRC():
     global crcTx
-    ser.write(chr(crcTx))
+    if PY3:
+        ser.write([crcTx])
+    else:
+        ser.write(chr(crcTx))
     
 '''
 Send one byte and computes crc
@@ -395,7 +424,10 @@ def sendByte(byte):
     if byte < 0 or byte > 255:
         raise SlabEx("Byte value out of range")
     global crcTx
-    ser.write(chr(byte))
+    if PY3:
+        ser.write([byte])
+    else:
+        ser.write(chr(byte))
     crcTx = crcTx ^ byte
    
 '''
@@ -437,7 +469,7 @@ It usually ends the Rx reception
 '''    
 def checkCRC():
     global crcRx
-    crc = ord (ser.read())
+    crc = ord(ser.read())
     if crc != crcRx:
         raise SlabEx("CRC Error in Board to PC link")
    
@@ -446,8 +478,8 @@ Get one byte and computes crc
 '''   
 def getByte():
     global crcRx
-    byte = ord (ser.read())
-    crcRx = crcRx ^ byte
+    byte = ord(ser.read())
+    crcRx = crcRx ^ byte    
     return byte
     
 '''
@@ -518,10 +550,10 @@ def checkMagic():
     # Check that it responds if not Linux
     if not linux:
         time.sleep(0.1)
-   
-        if ser.inWaiting() < 5 :
-	        return 0
-    
+      
+        if ser.inWaiting() < 5:
+            return 0
+        
     read = getByte()
     if read != ACK:
         return 0
@@ -562,7 +594,7 @@ def detectCom():
     
     # Check if there is a saved last port
     try:
-        with open(fprefix + LAST_COM_FILE) as f:
+        with open(fprefix + LAST_COM_FILE,'rb') as f:
             com_port = pickle.load(f) 
     except:
         pass
@@ -701,7 +733,10 @@ def getFirmwareString():
         for i in range(0,nchar):
             car = ser.read()
             if (not car == '\n') and (not car == '\r'):
-                cad = cad + str(car)
+                if PY3:
+                    cad = cad + car.decode("utf-8")
+                else:
+                    cad = cad + str(car)
         return cad        
     else:
         car = ser.read()
@@ -735,7 +770,7 @@ def getBoardData():
     global vref,dac_bits,adc_bits
     global ndio
     
-    print "Getting board data"
+    print("Getting board data")
     
     # Get firmware string
     board_name = getFirmwareString()
@@ -929,7 +964,7 @@ Included in slab.py
 '''
 def help(topic="root"):
     while (True):
-        print
+        print()
         ftopic = "@"+topic+"@"
         topic_found = False
         list = []
@@ -940,7 +975,7 @@ def help(topic="root"):
                     continue
                 if not topic_found:
                     if line.startswith("@#"):
-                        print "'" + topic + "' topic not found"
+                        print("'" + topic + "' topic not found")
                         break
                     elif line.upper().startswith(ftopic.upper()):
                         topic_found = True
@@ -950,20 +985,20 @@ def help(topic="root"):
                     list.append(" " + line[0:-1]) 
                     if len(line) > maxlen:
                         maxlen = len(line)
-                    # print " " + line[0:-1]
+                    # print(" " + line[0:-1])
         if topic_found:            
-            print (maxlen+1)*"-"
+            print((maxlen+1)*"-")
             for line in list:
-                print line
-            print (maxlen+1)*"-"
+                print(line)
+            print((maxlen+1)*"-")
         else:
-            print        
-        print "root topic goes to main page"
-        print "Just hit return to exit help"
-        print
-        topic = raw_input("Help topic : ")
+            print()        
+        print("root topic goes to main page")
+        print("Just hit return to exit help")
+        print()
+        topic = input("Help topic : ")
         if topic == "":
-            print
+            print()
             return
        
 ############# PUBLIC NO BOARD RELATED FUNCTIONS #################
@@ -993,7 +1028,7 @@ Returns nothing
 Included in slab.py            
 '''    
 def pause(message="Script Paused. Hit RETURN to continue"):
-    raw_input(message)
+    input(message)
     
     
 '''
@@ -1085,7 +1120,7 @@ Returns variable contained in the file
 Included in slab.py 
 '''    
 def load(filename):
-    with open(filename+".sav") as f:
+    with open(filename+".sav",'rb') as f:
         data = pickle.load(f)
     message(1,"Data loaded")    
     return data
@@ -1102,22 +1137,22 @@ Included in slab.py
 def printBoardInfo():
     if not opened:
         raise SlabEx("No board connected")
-    print ""
-    print "Board : " + board_name
-    print "  COM port : " + str(com_port)
-    print "  Reference Vref voltage : " + str(vref) + " V"
-    print "  Power Vdd voltage : " + str(vdd) + " V"
-    print "  " + str(ndacs) + " DACs with " + str(dac_bits) + " bits"
-    print "  " + str(nadcs) + " ADCs with " + str(adc_bits) + " bits"
-    print "  " + str(ndio) + " Digital I/O lines"
-    print "  DAC Pins " + str(dacPinList)
-    print "  ADC Pins " + str(adcPinList)
-    print "  DIO Pins " + str(dioPinList)
-    print "  Buffer Size : " + str(buff_size) + " samples"
-    print "  Maximum Sample Period : " + str(max_sample) + " s"
-    print "  Minimum Sample Period for Transient Async: " + str(min_sample) + " s"
-    print "  Maximum Sample Frequency for Frequency Response : " + str(maxSFfresponse) + " Hz"
-    print ""
+    print("")
+    print("Board : " + board_name)
+    print("  COM port : " + str(com_port))
+    print("  Reference Vref voltage : " + str(vref) + " V")
+    print("  Power Vdd voltage : " + str(vdd) + " V")
+    print("  " + str(ndacs) + " DACs with " + str(dac_bits) + " bits")
+    print("  " + str(nadcs) + " ADCs with " + str(adc_bits) + " bits")
+    print("  " + str(ndio) + " Digital I/O lines")
+    print("  DAC Pins " + str(dacPinList))
+    print("  ADC Pins " + str(adcPinList))
+    print("  DIO Pins " + str(dioPinList))
+    print("  Buffer Size : " + str(buff_size) + " samples")
+    print("  Maximum Sample Period : " + str(max_sample) + " s")
+    print("  Minimum Sample Period for Transient Async: " + str(min_sample) + " s")
+    print("  Maximum Sample Frequency for Frequency Response : " + str(maxSFfresponse) + " Hz")
+    print("")
  
   
 '''
@@ -1196,7 +1231,7 @@ def connect(portIdent=-1):
                     
     # Try to load ADC calibration data
     try:
-        with open(fprefix + calprefix + ADC_CAL_FILE) as f:
+        with open(fprefix + calprefix + ADC_CAL_FILE,'rb') as f:
             xcal,ycal1,ycal2,ycal3,ycal4 = pickle.load(f) 
     except:
         message(1,"No ADC calibration data found")
@@ -1207,7 +1242,7 @@ def connect(portIdent=-1):
         
     # Try to load DAC calibration data
     try:
-        with open(fprefix + calprefix + DAC_CAL_FILE) as f:
+        with open(fprefix + calprefix + DAC_CAL_FILE,'rb') as f:
             dacx,dac1y,dac2y,dac3y,dac4y = pickle.load(f) 
     except:
         message(1,"No DAC calibration data found")
@@ -1218,7 +1253,7 @@ def connect(portIdent=-1):
         
     # Try to load Vdd and Vref calibration data
     try:
-        with open(fprefix + calprefix + VDD_CAL_FILE) as f:
+        with open(fprefix + calprefix + VDD_CAL_FILE,'rb') as f:
             vdd,vref = pickle.load(f)
     except:
         pass
@@ -1432,13 +1467,13 @@ Included in slab.py
 def adcCalibrate():
     global xcal,ycal1,ycal2,ycal3,ycal4,adcCalData
     
-    print
-    print "Calibration of ADCs"
-    print
-    print "Connect the DAC 1 output to all ADC inputs"
-    print "Use the buffers in all connections"
-    print    
-    raw_input("Press [Return] to continue")
+    print()
+    print("Calibration of ADCs")
+    print()
+    print("Connect the DAC 1 output to all ADC inputs")
+    print("Use the buffers in all connections")
+    print()   
+    input("Press [Return] to continue")
     
     # Increase number of readings for better calibration
     lastDCR=setDCreadings(1000)
@@ -1519,9 +1554,9 @@ def adcCalibrate():
     # Restore the number of ADC readings
     setDCreadings(lastDCR)
             
-    print 
-    print "Calibration of ADCs completed"
-    print    
+    print() 
+    print("Calibration of ADCs completed")
+    print()    
    
 '''
 Stores DAC calibration data
@@ -1571,13 +1606,13 @@ Included in slab.py
 def dacCalibrate():
     global dacx,dac1y,dac2y,dac3y,dac4y,dacCalData
     
-    print
-    print "Calibration of DACs"
-    print
-    print "Connect the DAC outputs to ADC inputs with same number"
-    print "DAC 1 to ADC 1 and DAC2 to ADC2 and son on..."
-    print    
-    raw_input("Press [Return] to continue")
+    print()
+    print("Calibration of DACs")
+    print()
+    print("Connect the DAC outputs to ADC inputs with same number")
+    print("DAC 1 to ADC 1 and DAC2 to ADC2 and son on...")
+    print()    
+    input("Press [Return] to continue")
     
     # Increase number of readings for better calibration
     lastDCR=setDCreadings(1000)
@@ -1635,9 +1670,9 @@ def dacCalibrate():
     # Restore the number of ADC readings
     setDCreadings(lastDCR) 
      
-    print 
-    print "Calibration of DACs completed"
-    print     
+    print() 
+    print("Calibration of DACs completed")
+    print()     
    
 '''
 @manualCalibrateDAC1@
@@ -1650,18 +1685,18 @@ Included in slab.py
 '''   
 def manualCalibrateDAC1():  
     global vdd,vref,dacx,dac1y
-    print
-    print "Manual calibration of DAC 1"
-    print "You will need a voltage measurement instrument (VM)" 
-    print
-    print "Put VM between the Vdd terminal and GND"
-    print "Write down the voltage value and press enter"
-    print
-    vdd = float(raw_input("Voltage value [Volt]: "))
-    print
-    print "Put VM between the buffered DAC 1 output and GND"
-    print "Write down the voltage value and press enter each time it is asked"
-    print
+    print()
+    print("Manual calibration of DAC 1")
+    print("You will need a voltage measurement instrument (VM)" )
+    print()
+    print("Put VM between the Vdd terminal and GND")
+    print("Write down the voltage value and press enter")
+    print()
+    vdd = float(input("Voltage value [Volt]: "))
+    print()
+    print("Put VM between the buffered DAC 1 output and GND")
+    print("Write down the voltage value and press enter each time it is asked")
+    print()
     
     # Increase number of readings for better calibration
     lastDCR=setDCreadings(1000)
@@ -1672,7 +1707,7 @@ def manualCalibrateDAC1():
     prevv = -1.0
     for x in dacx:
         writeChannel(1,x)
-        y = float(raw_input("Voltage value [Volt]: "))
+        y = float(input("Voltage value [Volt]: "))
         voltages.append(y)
         if y < prevv:
             raise SlabEx("Non monotonous. Cannot calibrate")
@@ -1695,9 +1730,9 @@ def manualCalibrateDAC1():
     # Restore the number of ADC readings
     setDCreadings(lastDCR) 
     
-    print 
-    print "Manual calibration of DAC 1 completed"
-    print    
+    print() 
+    print("Manual calibration of DAC 1 completed")
+    print()    
     
 
 '''
@@ -1711,14 +1746,14 @@ Included in slab.py
 '''    
 def checkCalibration():
 
-    print
-    print "Calibration check"
-    print
-    print "Connect the DAC outputs to ADC inputs with same number"
-    print "DAC 1 to ADC 1 and DAC2 to ADC2 and son on..."
-    print "Connect the rest of ADCs to DAC 1"
-    print    
-    raw_input("Press [Return] to continue")
+    print()
+    print("Calibration check")
+    print()
+    print("Connect the DAC outputs to ADC inputs with same number")
+    print("DAC 1 to ADC 1 and DAC2 to ADC2 and son on...")
+    print("Connect the rest of ADCs to DAC 1")
+    print()    
+    input("Press [Return] to continue")
 
     # Increase number of readings for better calibration
     lastDCR=setDCreadings(400)
@@ -1770,12 +1805,12 @@ def dcPrint():
     a2 = readVoltage(2);
     a3 = readVoltage(3);
     a4 = readVoltage(4);
-    print "ADC DC Values"
-    print "  ADC1 = "+"{0:.3f}".format(a1)+" V"
-    print "  ADC2 = "+"{0:.3f}".format(a2)+" V"
-    print "  ADC3 = "+"{0:.3f}".format(a3)+" V"
-    print "  ADC4 = "+"{0:.3f}".format(a4)+" V"
-    print ""
+    print("ADC DC Values")
+    print("  ADC1 = "+"{0:.3f}".format(a1)+" V")
+    print("  ADC2 = "+"{0:.3f}".format(a2)+" V")
+    print("  ADC3 = "+"{0:.3f}".format(a3)+" V")
+    print("  ADC4 = "+"{0:.3f}".format(a4)+" V")
+    print()
     
 '''
 @zero@
@@ -1809,7 +1844,7 @@ def dcLive(n=4,wt=0.2,single=False,returnData=False):
     if not opened:
         raise SlabEx("Not connected to board")
     if n < 1 or n > 4:
-        raise SlabEx("ADC number out of range")
+        raise SlabEx("Invalid number of ADCs")
     
     # Generate output lists
     data=[]
@@ -1817,8 +1852,8 @@ def dcLive(n=4,wt=0.2,single=False,returnData=False):
         for i in range(0,n):
             data.append([])
     
-    print "Live voltage readings:"
-    print
+    print("Live voltage readings:")
+    print()
     try:
         while True:
             sys.stdout.write("\r")
@@ -1838,9 +1873,9 @@ def dcLive(n=4,wt=0.2,single=False,returnData=False):
             sys.stdout.write("    ")
             wait(wt)
     except:
-        print
-        print "End of live measurements"
-        print
+        print()
+        print("End of live measurements")
+        print()
         
     # Compose return data if enabled    
     if returnData:
@@ -2263,9 +2298,9 @@ def realtimePlot(nadc=1,wt=0.2,n=0,returnData=False):
             plt.pause(wt)
                
     except:
-        print
-        print "End of realtime measurements"
-        print    
+        print()
+        print("End of realtime measurements")
+        print()
 
     plt.close()
 
@@ -2348,7 +2383,7 @@ This command has an alias tranStore
 '''    
 def setTransientStorage(samples,na=1,nd=0):
     if nd != 0:
-        raise SlabEx("Digita signals not implented yet")
+        raise SlabEx("Digital signals not implemented yet")
     
     # Check space
     checkBuffSpace(samples,na,nd)

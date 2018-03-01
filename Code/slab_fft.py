@@ -5,8 +5,11 @@ It requires and imports slab.py
 History:
 
 Version 1.0 : First version (7/4/2017)
+Version 1.1 : Compatibility with Python 3.x (1/3/2018)
 
 '''
+
+from __future__ import print_function
 
 import slab
 import slab_ac as ac
@@ -126,7 +129,7 @@ def distortion(v1,v2,freq,show=True):
     for i in range(2,7):
         tot = tot + np.abs(c[i*cycles])*np.abs(c[i*cycles]) 
     tot = np.sqrt(tot)
-    print "tot: " +str(tot)
+    print("tot: " +str(tot))
     thd = 100.0 * tot/base  
     
     # THD+N
@@ -142,12 +145,12 @@ def distortion(v1,v2,freq,show=True):
     h3 = dB(np.abs(c[3*cycles])/base)
     
     if show:
-        print
-        print "THD   : " + str(thd) + " %"
-        print "THD+N : " + str(thdn) + " %"
-        print "Harmonic distortion 2nd : " + str(h2) + " dBc"
-        print "Harmonic distortion 3rd : " + str(h3) + " dBc"
-        print
+        print()
+        print("THD   : " + str(thd) + " %")
+        print("THD+N : " + str(thdn) + " %")
+        print("Harmonic distortion 2nd : " + str(h2) + " dBc")
+        print("Harmonic distortion 3rd : " + str(h3) + " dBc")
+        print()
     
     return thd,thdn,h2,h3
     

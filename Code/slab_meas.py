@@ -5,8 +5,10 @@ It requires and imports slab.py
 History:
 
 Version 1.0 : First version (7/4/2017)
+Version 1.1 : Compatibility with Python 3.x (1/3/2018)
 
 '''
+from __future__ import print_function
 
 import slab
 import numpy as np                # Numpy for math calculations
@@ -18,8 +20,8 @@ import numbers        # Numbers module
 
 # Version information
 version_major = 1
-version_minor = 0
-version_date  = "7/4/2017"
+version_minor = 1
+version_date  = "1/3/2018"
 
 ###################### INFO FOR THE HELP FILE ##########################
 
@@ -176,34 +178,34 @@ def analyze(data=[]):
     else:
         x = data[0]
         y = data[1:]
-        print 
-        print "Min time: " + str(x[0]) + tUnit
-        print "Max time: " + str(x[-1]) + tUnit
-        print "Total time: " + str(x[-1]-x[0]) +tUnit       
+        print() 
+        print("Min time: " + str(x[0]) + tUnit)
+        print("Max time: " + str(x[-1]) + tUnit)
+        print("Total time: " + str(x[-1]-x[0]) +tUnit)
        
-    print    
+    print()    
     for i in range(0,len(y)):
     
-        print "Signal " + str(i+1)
-        print "   Mean: " + str(slab.mean(y[i])) + vUnit
-        print "   Std Dev: " + str(slab.std(y[i])) + vUnit
-        print
-        print "   High Peak: " + str(slab.highPeak(y[i])) + vUnit  
-        print "   Low Peak: " + str(slab.lowPeak(y[i])) + vUnit 
-        print "   Peak2peak: " + str(slab.peak2peak(y[i])) + vUnit
-        print "   Half Range: " + str(slab.halfRange(y[i])) + vUnit
-        print "   RMS: " + str(slab.rms(y[i])) + vUnit
+        print("Signal " + str(i+1))
+        print("   Mean: " + str(slab.mean(y[i])) + vUnit)
+        print("   Std Dev: " + str(slab.std(y[i])) + vUnit)
+        print()
+        print("   High Peak: " + str(slab.highPeak(y[i])) + vUnit)
+        print("   Low Peak: " + str(slab.lowPeak(y[i])) + vUnit)
+        print("   Peak2peak: " + str(slab.peak2peak(y[i])) + vUnit)
+        print("   Half Range: " + str(slab.halfRange(y[i])) + vUnit)
+        print("   RMS: " + str(slab.rms(y[i])) + vUnit)
         
         try:
             per = period(y[i],x)
         except:
             pass
         else:            
-            print
-            print "   Mean period: " + str(per) + tUnit
-            print "   Mean frequency: " + str(1/per) + fUnit
+            print()
+            print("   Mean period: " + str(per) + tUnit)
+            print("   Mean frequency: " + str(1/per) + fUnit)
             
-        print
+        print()
   
 ################## CODE EXECUTED AT IMPORT ####################
   
