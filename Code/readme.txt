@@ -1,5 +1,5 @@
 =======================================================
- SLab System v1.2 (11/2/2018)
+ SLab System v1.3 (1/3/2018)
 =======================================================
  Code Folder Contents
 =======================================================
@@ -16,13 +16,13 @@ SLab Python module ______________________________________
 
   The SLab Python modules are composed of several files:
 
-         slab.py : Main SLab Python module
+         slab.py : Main SLab Python module (v1.1)
    SLab_Help.dat : Help file for the Python module
-         slab_ac : Module for AC functions
-         slab_dc : Module for DC functions
-        slab_fft : Module for FFT related functions
-       slab_meas : Module for no trivial measurements
-         slab_ez : SLab easy module
+      slab_ac.py : Module for AC functions (v1.0)
+      slab_dc.py : Module for DC functions (v1.0)
+     slab_fft.py : Module for FFT related functions (v1.1)
+    slab_meas.py : Module for no trivial measurements (v1.1)
+      slab_ez.py : SLab easy module (v1.0)
 
 Calibration files ______________________________________
 
@@ -59,6 +59,9 @@ Example folder _____________________________________________
 Misc Python files ___________________________________________
 
   Those files perform miscelaneous functions
+
+    slabTest.py : Test suite for SLab (v1.0)
+                  Checks basic SLab functionality 
 
         zero.py : Simple script that sets all DACs to zero
 
