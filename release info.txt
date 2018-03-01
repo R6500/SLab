@@ -1,0 +1,58 @@
+=======================================================
+ SLab System v1.3 (1/3/2018)
+=======================================================
+
+DISCLAIMER
+
+ALL THE SOFTWARE ASSOCIATED TO THE SLAB PROJECT IS PROVIDED 
+"AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, 
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR 
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+COPYRIGHT OF PDF DOCUMENTS
+
+All pdf documents on the SLab project are released under
+a Creative Common Attribution-ShareAlike 4.0 International license:
+
+https://creativecommons.org/licenses/by-sa/4.0/
+
+
+=======================================================
+ Main Folder Contents
+=======================================================
+
+This is the main folder of the SLab project
+
+It contains the following subfolders:
+
+Code : Forder where slab.py is located
+       You usually will run Python from this folder
+
+Docs : Documentation and tutorials from the SLab project
+
+Firmware : Firmware for the supported hardware boards
+
+Hardware : Design files for the F303RE shield
+
+=======================================================
+ Distribution history
+=======================================================
+
+ v1.2 (11/02/2018)
+      This is the first public SLAB distribution
+
+ v1.3 (1/3/2018)
+      Added compatibility with Python 3.x
+      Now it should work both with 2.7 and 3.x
+      Affected files in SLab/Code folder:
+          slab.py, slab_meas.py, slab_fft.py, slabTest.py 
+
