@@ -55,4 +55,6 @@ Hardware : Design files for the F303RE shield
       Now it should work both with 2.7 and 3.x
       Affected files in SLab/Code folder:
           slab.py, slab_meas.py, slab_fft.py, slabTest.py 
-
+      (21/3/2018)
+      Included the root SLab folder in the zip file
+      No changes are made to the files
