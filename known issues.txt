@@ -1,0 +1,18 @@
+=====================
+ SLab Known Issues
+=====================
+
+This document contains some issues related to the current SLab distribution
+
+Issues of SLab v1.3 release
+
+( ) The board communication locks with a "Reading Board Data" message
+    This is due to changes in the Pyserial interface and only affects Linux
+    Test if the following code connects with the board:
+       >>> import slab
+       >>> slab.linux = False
+       >>> slab.connect()
+     If the code works, the permanent solution is to edit the slab.py file 
+     and add a line, at the end that contanins
+       linux = False
+       
